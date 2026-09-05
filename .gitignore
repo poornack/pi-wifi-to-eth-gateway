@@ -1,0 +1,6 @@
+# secrets and generated config
+config.local
+.config.generated
+# build output
+deploy/
+*.log

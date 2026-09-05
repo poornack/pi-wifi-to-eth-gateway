@@ -1,0 +1,12 @@
+diff --git a/stage0/prerun.sh b/stage0/prerun.sh
+index c625b0e..1f3b635 100755
+--- a/stage0/prerun.sh
++++ b/stage0/prerun.sh
+@@ -6,5 +6,6 @@ if [ "$RELEASE" != "trixie" ]; then
+ fi
+ 
+ if [ ! -d "${ROOTFS_DIR}" ]; then
+-	bootstrap ${RELEASE} "${ROOTFS_DIR}" http://raspbian.raspberrypi.com/raspbian/
++        debootstrap --no-check-gpg  "${RELEASE}" "${ROOTFS_DIR}" "${MIRROR}"
++#	bootstrap ${RELEASE} "${ROOTFS_DIR}" http://raspbian.raspberrypi.com/raspbian/
+ fi
