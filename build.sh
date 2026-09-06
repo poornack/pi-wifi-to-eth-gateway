@@ -64,7 +64,7 @@ chmod 600 "${ROOT}/pi-gen-config" "${ROOT}/network-config"
 
 # 4. Mount our files into the container without touching the submodule:
 #    - pi-gen-mounts/stage-gateway: our build stage, at the path STAGE_LIST expects
-#    - network-config: read by stage-gateway/01-network/00-run.sh (addresses + WiFi)
+#    - network-config: read by pi-gen-mounts/stage-gateway/01-network/00-run.sh (addresses + WiFi)
 #    - stage2/SKIP_IMAGES: stop pi-gen exporting the intermediate "Lite" image
 export PIGEN_DOCKER_OPTS="${PIGEN_DOCKER_OPTS:-} \
 	--volume ${ROOT}/pi-gen-mounts/stage-gateway:/pi-gen/stage-gateway \

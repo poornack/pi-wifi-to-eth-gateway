@@ -60,4 +60,4 @@ printf '    Home network <-> wired devices is not NATed, so devices keep their r
 printf '    Only internet-bound traffic is masqueraded (%s/etc/nftables.conf%s).\n' "$B" "$R"
 printf '  %s*%s Your home router needs a static route: %s -> this Pi'"'"'s WiFi IP (%s).\n' "$BL" "$R" "${eth_net:-?}" "${wifi_ip:-?}"
 printf '    Reserve that IP on the router so it never changes (WiFi MAC %s%s%s).\n' "$D" "${wifi_mac:-?}" "$R"
-printf '  %s*%s Image built from github.com/poornack/pi-wifi-to-eth-modem (pi-gen + stage-gateway).\n\n' "$BL" "$R"
+printf '  %s*%s Image built from github.com/poornack/pi-wifi-to-eth-gateway (pi-gen + stage-gateway).\n\n' "$BL" "$R"
