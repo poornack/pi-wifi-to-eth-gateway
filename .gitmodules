@@ -1,4 +1,7 @@
+# pi-gen is pinned by git to one exact commit (the "gitlink" stored in this
+# repo's tree; see `git submodule status`). Currently 314262cb, the
+# 2026-06-18 Raspberry Pi OS trixie release of pi-gen. To move to a newer
+# pi-gen: cd pi-gen && git checkout <commit> && cd .. && git add pi-gen.
 [submodule "pi-gen"]
 	path = pi-gen
 	url = https://github.com/RPi-Distro/pi-gen.git
-	ignore = dirty

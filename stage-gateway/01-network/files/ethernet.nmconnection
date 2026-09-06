@@ -1,0 +1,22 @@
+# NetworkManager profile for the Pi's Ethernet side (the wired device side).
+# Fixed address, and never used as a default route: internet traffic must
+# leave over WiFi.
+[connection]
+id=gateway-ethernet
+type=ethernet
+interface-name=${GATEWAY_ETH_IF}
+autoconnect=true
+autoconnect-priority=-999
+
+[ethernet]
+
+[ipv4]
+method=manual
+address1=${GATEWAY_ETH_IP}/${GATEWAY_ETH_PREFIX}
+never-default=true
+
+[ipv6]
+method=disabled
+addr-gen-mode=default
+
+[proxy]

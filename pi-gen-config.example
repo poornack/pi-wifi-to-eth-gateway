@@ -1,0 +1,46 @@
+# pi-gen settings for the WiFi -> Ethernet gateway image.
+#
+# build.sh copies this file to ./pi-gen-config on first run. Edit that copy.
+# pi-gen-config is gitignored because it holds your password and WiFi key.
+# Network layout (addresses, DHCP range) lives in ./network-config.
+#
+# Full list of pi-gen options: pi-gen/README.md, section "Config".
+
+IMG_NAME="pi-wifi-to-eth-gateway"
+PI_GEN_RELEASE="WiFi <-> Ethernet Gateway"
+# none = plain .img (fastest to flash). Use xz for a much smaller download.
+DEPLOY_COMPRESSION=none
+
+LOCALE_DEFAULT='en_CA.UTF-8'
+KEYBOARD_KEYMAP='ca'
+KEYBOARD_LAYOUT='Canada'
+TIMEZONE_DEFAULT='America/Los_Angeles'
+TARGET_HOSTNAME='pi-gateway'
+
+# --- Login ------------------------------------------------------------------
+FIRST_USER_NAME='pi'
+FIRST_USER_PASS='change-me'
+# Keep FIRST_USER_NAME as-is on first boot instead of running the rename
+# wizard. This also stops the "SSH may not work until a valid user has been
+# set up" message from appearing at every SSH login.
+DISABLE_FIRST_BOOT_USER_RENAME=1
+PASSWORDLESS_SUDO=0
+
+ENABLE_SSH=1
+PUBKEY_ONLY_SSH=0
+# Optional: your SSH public key, so you can log in without a password.
+PUBKEY_SSH_FIRST_USER=""
+
+# --- WiFi (the gateway's uplink to your home network) ------------------------
+# Two-letter country code. REQUIRED: without it pi-gen leaves WiFi disabled.
+WPA_COUNTRY='US'
+# Baked into the image as a NetworkManager profile so the Pi joins your WiFi at
+# first boot. Leave WIFI_SSID empty to skip and configure WiFi later with nmtui.
+# "export" is needed so the stage-gateway scripts can read these.
+export WIFI_SSID='MyHomeWiFi'
+export WIFI_PSK='my-wifi-password'
+
+# --- Build stages -----------------------------------------------------------
+# stage0-2 are pi-gen's own (Raspberry Pi OS Lite). stage-gateway is this
+# repo's addition; build.sh mounts it into the pi-gen build container.
+STAGE_LIST="stage0 stage1 stage2 stage-gateway"

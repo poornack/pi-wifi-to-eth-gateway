@@ -1,0 +1,31 @@
+# Network layout for the WiFi -> Ethernet gateway.
+#
+# build.sh copies this file to ./network-config on first run. Edit that copy.
+# Every value is required; the build stops with a clear error if one is missing.
+# "export" is needed so the stage-gateway scripts can read these.
+#
+#   [Your laptop] <-wifi-> [Home router] <-wifi-> [Pi WiFi side]
+#                                                [Pi Ethernet side] <-cable-> [Your wired device]
+#
+# The Pi's Ethernet side is its own small network (GATEWAY_ETH_NET). Your home
+# router needs one static route: GATEWAY_ETH_NET -> the Pi's WiFi IP address.
+
+# Interface names on the Pi. On every Raspberry Pi these are wlan0 and eth0.
+export GATEWAY_WIFI_IF="wlan0"
+export GATEWAY_ETH_IF="eth0"
+
+# Your home network, as the router hands it out. Traffic between it and the
+# Pi's Ethernet side is routed directly (no NAT), so wired devices are reachable
+# by their real address from any machine on your home network.
+export GATEWAY_HOME_LAN="192.168.0.0/24"
+
+# The Pi's Ethernet side. Must NOT overlap GATEWAY_HOME_LAN.
+export GATEWAY_ETH_NET="192.168.2.0/24"
+export GATEWAY_ETH_IP="192.168.2.1"       # the Pi's own address, and the default gateway for wired devices
+export GATEWAY_ETH_PREFIX="24"
+
+# DHCP pool handed out to wired devices. Addresses below the pool (.2-.9 here)
+# are free for fixed reservations, see stage-gateway/01-network/files/dhcp-reservations.conf
+export GATEWAY_DHCP_START="192.168.2.10"
+export GATEWAY_DHCP_END="192.168.2.100"
+export GATEWAY_DHCP_LEASE="12h"
