@@ -1,8 +1,6 @@
 # Network layout for the WiFi -> Ethernet gateway.
 #
-# build.sh copies this file to ./network-config on first run. Edit that copy.
 # network-config is gitignored because it holds your WiFi password.
-# Every value is required; the build stops with a clear error if one is missing.
 # "export" is needed so the stage-gateway scripts can read these.
 #
 #   [Your laptop] <-wifi-> [Home router] <-wifi-> [Pi WiFi side]
