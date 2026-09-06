@@ -11,12 +11,6 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PIGEN="${ROOT}/pi-gen"
 
-# 1. pi-gen submodule present?
-if [ ! -f "${PIGEN}/build-docker.sh" ]; then
-	echo ">> fetching the pi-gen submodule"
-	git -C "${ROOT}" submodule update --init
-fi
-
 # 2. Config files. Created from the examples on first run so you can edit them.
 missing=0
 for f in pi-gen-config network-config; do
@@ -82,5 +76,6 @@ cd "${PIGEN}"
 IMG_NAME="$(source "${ROOT}/pi-gen-config" >/dev/null 2>&1; echo "${IMG_NAME}")"
 mkdir -p "${ROOT}/deploy"
 cp -v "${PIGEN}"/deploy/*"${IMG_NAME}"* "${ROOT}/deploy/"
-echo ">> done. Your image:"
+echo ">> Built image:"
 ls -lh "${ROOT}/deploy"/*.img* 2>/dev/null || ls -lh "${ROOT}/deploy"
+echo ">> Build Succeeded"
