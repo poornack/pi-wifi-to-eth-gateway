@@ -1,6 +1,5 @@
 # pi-gen settings for the WiFi -> Ethernet gateway image.
 #
-# build.sh copies this file to ./pi-gen-config on first run. Edit that copy.
 # pi-gen-config is gitignored because it holds your login password.
 # Network layout and WiFi credentials live in ./network-config.
 #
@@ -8,8 +7,6 @@
 
 IMG_NAME="pi-wifi-to-eth-gateway"
 PI_GEN_RELEASE="WiFi <-> Ethernet Gateway"
-# none = plain .img (fastest to flash). Use xz for a much smaller download.
-DEPLOY_COMPRESSION=none
 
 LOCALE_DEFAULT='en_CA.UTF-8'
 KEYBOARD_KEYMAP='ca'
@@ -18,12 +15,11 @@ TIMEZONE_DEFAULT='America/Los_Angeles'
 TARGET_HOSTNAME='pi-gateway'
 
 # --- Login ------------------------------------------------------------------
+# Keep FIRST_USER_NAME as-is on first boot instead of running the rename wizard
+# Set to 0 if you want to set username and password later
+DISABLE_FIRST_BOOT_USER_RENAME=1
 FIRST_USER_NAME='pi'
 FIRST_USER_PASS='change-me'
-# Keep FIRST_USER_NAME as-is on first boot instead of running the rename
-# wizard. This also stops the "SSH may not work until a valid user has been
-# set up" message from appearing at every SSH login.
-DISABLE_FIRST_BOOT_USER_RENAME=1
 PASSWORDLESS_SUDO=0
 
 ENABLE_SSH=1
@@ -41,3 +37,6 @@ WPA_COUNTRY='US'
 # stage0-2 are pi-gen's own (Raspberry Pi OS Lite). stage-gateway is this
 # repo's addition; build.sh mounts it into the pi-gen build container.
 STAGE_LIST="stage0 stage1 stage2 stage-gateway"
+
+# none = plain .img (fastest to flash). Use xz for a much smaller download.
+DEPLOY_COMPRESSION=none
