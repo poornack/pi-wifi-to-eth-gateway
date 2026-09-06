@@ -59,6 +59,10 @@ your login and WiFi passwords, so edit them freely.
 
 ## Getting it running
 
+### 1. Config
+1. Open `pi-gen-config` and edit username, password, and anything you want to change there
+2. Open `network-config` and enter you Wi-Fi credentials and any modifications you want to make to the network config
+
 ### 1. Build the image
 
 Prerequisites: Linux or macOS with [Docker](https://www.docker.com/get-started/)
