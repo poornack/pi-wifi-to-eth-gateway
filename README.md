@@ -62,7 +62,7 @@ your login and WiFi passwords, so edit them freely.
 ### 1. Checkout
 1. Clone repo with submodules `git clone --recurse-submodules git@github.com:poornack/pi-wifi-to-eth-gateway.git`
 2. `cd pi-wifi-to-eth-gateway`
-3. Apply patches `git -C pi-gen apply ../patches/*.patch`
+3. Apply patches `cd pi-gen && git apply ../patches/*.patch ; cd -`
 
 
 ### 2. Config
