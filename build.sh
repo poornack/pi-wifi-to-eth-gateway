@@ -37,19 +37,6 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-# 2. Config files. Created from the examples on first run so you can edit them.
-missing=0
-for f in pi-gen-config network-config; do
-	if [ ! -f "${ROOT}/${f}" ]; then
-		cp "${ROOT}/${f}.example" "${ROOT}/${f}"
-		echo "!! created ${f} from ${f}.example"
-		missing=1
-	fi
-done
-if [ "${missing}" = 1 ]; then
-	echo "   Edit pi-gen-config (login password) and network-config (addresses, WiFi), then run ./build.sh again."
-	exit 1
-fi
 # Both hold secrets (login password, WiFi password)
 chmod 600 "${ROOT}/pi-gen-config" "${ROOT}/network-config"
 
