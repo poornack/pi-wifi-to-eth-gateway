@@ -1,0 +1,41 @@
+# pi-gen settings for the WiFi -> Ethernet gateway image.
+#
+# pi-gen-config is gitignored because it holds your login password.
+# Network layout and WiFi credentials live in ./network-config.
+#
+# Full list of pi-gen options: pi-gen/README.md, section "Config".
+
+IMG_NAME="pi-wifi-to-eth-gateway"
+PI_GEN_RELEASE="WiFi <-> Ethernet Gateway"
+TARGET_HOSTNAME='pi-gateway'
+
+# --- Login ------------------------------------------------------------------
+# Keep FIRST_USER_NAME as-is on first boot instead of running the rename wizard
+# Set to 0 if you want to set username and password later
+DISABLE_FIRST_BOOT_USER_RENAME=1
+FIRST_USER_NAME='pi'
+FIRST_USER_PASS='change-me'
+PASSWORDLESS_SUDO=0
+
+ENABLE_SSH=1
+PUBKEY_ONLY_SSH=0
+# Optional: your SSH public key, so you can log in without a password.
+PUBKEY_SSH_FIRST_USER=""
+
+# --- WiFi regulatory domain ---------------------------------------------------
+# Two-letter country code. REQUIRED: without it pi-gen leaves WiFi disabled.
+# This is a pi-gen setting (applied by pi-gen's own stage2), which is why it is
+# here and not in network-config with the WiFi name and password.
+WPA_COUNTRY='CA'
+
+# --- Build stages -----------------------------------------------------------
+# stage0-2 are pi-gen's own (Raspberry Pi OS Lite). stage-gateway is this
+# repo's addition; build.sh mounts it into the pi-gen build container.
+STAGE_LIST="stage0 stage1 stage2 stage-gateway"
+
+# none = plain .img (fastest to flash). Use xz for a much smaller download.
+DEPLOY_COMPRESSION=none
+LOCALE_DEFAULT='en_CA.UTF-8'
+KEYBOARD_KEYMAP='ca'
+KEYBOARD_LAYOUT='Canada'
+TIMEZONE_DEFAULT='America/Los_Angeles'

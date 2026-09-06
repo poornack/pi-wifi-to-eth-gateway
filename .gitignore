@@ -1,0 +1,6 @@
+# Your local copies of the example configs (contain your password and WiFi key)
+pi-gen-config
+network-config
+# Build output
+deploy/
+*.log

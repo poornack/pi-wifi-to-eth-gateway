@@ -1,0 +1,13 @@
+diff --git a/build-docker.sh b/build-docker.sh
+index 39ab673..479eae0 100755
+--- a/build-docker.sh
++++ b/build-docker.sh
+@@ -80,7 +80,7 @@ if [ "${CONTAINER_EXISTS}" != "" ] && [ "${CONTINUE}" != "1" ]; then
+ fi
+ 
+ # Modify original build-options to allow config file to be mounted in the docker container
+-BUILD_OPTS="$(echo "${BUILD_OPTS:-}" | sed -E 's@\-c\s?([^ ]+)@-c /config@')"
++BUILD_OPTS="$(echo "${BUILD_OPTS:-}" | sed -E 's@\-c[[:space:]]?([^ ]+)@-c /config@')"
+ 
+ ${DOCKER} build --build-arg BASE_IMAGE=debian:trixie -t pi-gen "${DIR}"
+ 
