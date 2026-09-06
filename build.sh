@@ -5,8 +5,7 @@
 #   ./clean.sh              throw away the previous build and start from scratch
 #   DRY_RUN=1 ./build.sh    check config only, do not build
 #
-# This script never modifies files under pi-gen/. Extra files pi-gen needs are
-# bind-mounted into the build container (see pi-gen-mounts/README.md).
+
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
