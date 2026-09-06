@@ -3,9 +3,8 @@
 #   WiFi side    : joins the home network, gets its address from the home router
 #   Ethernet side: fixed address; dnsmasq hands out addresses to wired devices
 #   Forwarding on; NAT only for internet-bound traffic (see files/nftables.conf)
-# All settings come from ./network-config (mounted into this stage by build.sh)
-# and the WIFI_* values in pi-gen-config. Templates live in ./files; ${VAR}
-# placeholders are filled in by render() below.
+# All settings come from ./network-config (mounted into this stage by build.sh).
+# Templates live in ./files; ${VAR} placeholders are filled in by render() below.
 
 # Load the network layout. Fail clearly if the file or any value is missing.
 source "${STAGE_DIR}/network-config"
@@ -31,7 +30,8 @@ render ethernet.nmconnection "${NM_DIR}/gateway-ethernet.nmconnection" 600
 
 # WiFi side: join the home network (skipped if WIFI_SSID is empty)
 if [ -n "${WIFI_SSID:-}" ]; then
-	: "${WIFI_PSK:?WIFI_PSK is not set in pi-gen-config}"
+	: "${WIFI_PSK:?WIFI_PSK is not set in network-config}"
+	export WIFI_SSID WIFI_PSK
 	render wifi.nmconnection "${NM_DIR}/${WIFI_SSID}.nmconnection" 600
 	echo "WiFi profile installed for '${WIFI_SSID}'"
 else

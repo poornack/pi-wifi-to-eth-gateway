@@ -1,6 +1,7 @@
 # Network layout for the WiFi -> Ethernet gateway.
 #
 # build.sh copies this file to ./network-config on first run. Edit that copy.
+# network-config is gitignored because it holds your WiFi password.
 # Every value is required; the build stops with a clear error if one is missing.
 # "export" is needed so the stage-gateway scripts can read these.
 #
@@ -10,6 +11,13 @@
 # The Pi's Ethernet side is its own small network (GATEWAY_ETH_NET). Your home
 # router needs one static route: GATEWAY_ETH_NET -> the Pi's WiFi IP address.
 
+# --- WiFi (the gateway's uplink to your home network) ------------------------
+# Baked into the image as a NetworkManager profile so the Pi joins your WiFi at
+# first boot. Leave WIFI_SSID empty to skip and configure WiFi later with nmtui.
+export WIFI_SSID='MyHomeWiFi'
+export WIFI_PSK='my-wifi-password'
+
+# --- Interfaces ----------------------------------------------------------------
 # Interface names on the Pi. On every Raspberry Pi these are wlan0 and eth0.
 export GATEWAY_WIFI_IF="wlan0"
 export GATEWAY_ETH_IF="eth0"

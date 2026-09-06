@@ -1,15 +1,41 @@
 #!/usr/bin/env bash
 # Build the WiFi -> Ethernet gateway image with pi-gen, inside Docker.
 #
-#   ./build.sh              build (or resume a previous, interrupted build)
-#   ./clean.sh              throw away the previous build and start from scratch
-#   DRY_RUN=1 ./build.sh    check config only, do not build
-#
+# Run ./build.sh --help for usage.
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PIGEN="${ROOT}/pi-gen"
+
+usage() {
+	cat <<- USAGE
+	Usage: ./build.sh [-n|--dry-run] [-h|--help]
+
+	Build the WiFi -> Ethernet gateway image with pi-gen, inside Docker.
+	Re-running after an interrupted build resumes where it stopped;
+	use ./clean.sh to start from scratch.
+
+	On the first run the two config files are created from their .example
+	files and the script stops so you can edit them:
+	  pi-gen-config    image name, locale, login user and password, WiFi country
+	  network-config   addresses, DHCP range, WiFi network name and password
+
+	Options:
+	  -n, --dry-run    check the config files and show what would run, do not build
+	  -h, --help       show this help
+	USAGE
+}
+
+DRY_RUN=0
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-n|--dry-run) DRY_RUN=1 ;;
+		-h|--help) usage; exit 0 ;;
+		*) echo "!! unknown option: $1" >&2; usage >&2; exit 2 ;;
+	esac
+	shift
+done
 
 # 2. Config files. Created from the examples on first run so you can edit them.
 missing=0
@@ -21,10 +47,11 @@ for f in pi-gen-config network-config; do
 	fi
 done
 if [ "${missing}" = 1 ]; then
-	echo "   Edit pi-gen-config (password, WiFi) and network-config (addresses), then run ./build.sh again."
+	echo "   Edit pi-gen-config (login password) and network-config (addresses, WiFi), then run ./build.sh again."
 	exit 1
 fi
-chmod 600 "${ROOT}/pi-gen-config"
+# Both hold secrets (login password, WiFi password)
+chmod 600 "${ROOT}/pi-gen-config" "${ROOT}/network-config"
 
 # 3. Check the values before spending half an hour in Docker.
 (
@@ -36,13 +63,13 @@ chmod 600 "${ROOT}/pi-gen-config"
 	: "${IMG_NAME:?IMG_NAME must be set in pi-gen-config}"
 	: "${FIRST_USER_PASS:?FIRST_USER_PASS must be set in pi-gen-config}"
 	: "${WPA_COUNTRY:?WPA_COUNTRY must be set in pi-gen-config (without it WiFi stays disabled)}"
-	if [ -n "${WIFI_SSID}" ] && { [ "${#WIFI_PSK}" -lt 8 ] || [ "${#WIFI_PSK}" -gt 63 ]; }; then
-		echo "WIFI_PSK must be 8-63 characters"; exit 1
-	fi
 	for v in GATEWAY_WIFI_IF GATEWAY_ETH_IF GATEWAY_HOME_LAN GATEWAY_ETH_NET GATEWAY_ETH_IP \
 	         GATEWAY_ETH_PREFIX GATEWAY_DHCP_START GATEWAY_DHCP_END GATEWAY_DHCP_LEASE; do
 		: "${!v:?$v must be set in network-config}"
 	done
+	if [ -n "${WIFI_SSID}" ] && { [ "${#WIFI_PSK}" -lt 8 ] || [ "${#WIFI_PSK}" -gt 63 ]; }; then
+		echo "!! WIFI_PSK in network-config must be 8-63 characters"; exit 1
+	fi
 	if [ "${FIRST_USER_PASS}" = "change-me" ]; then
 		echo "!! FIRST_USER_PASS in pi-gen-config is still the example value"; exit 1
 	fi
@@ -50,7 +77,7 @@ chmod 600 "${ROOT}/pi-gen-config"
 
 # 4. Mount our files into the container without touching the submodule:
 #    - stage-gateway: our build stage, at the path STAGE_LIST expects
-#    - network-config: read by stage-gateway/01-network/00-run.sh
+#    - network-config: read by stage-gateway/01-network/00-run.sh (addresses + WiFi)
 #    - stage2/SKIP_IMAGES: stop pi-gen exporting the intermediate "Lite" image
 export PIGEN_DOCKER_OPTS="${PIGEN_DOCKER_OPTS:-} \
 	--volume ${ROOT}/stage-gateway:/pi-gen/stage-gateway \
@@ -62,8 +89,8 @@ export PIGEN_DOCKER_OPTS="${PIGEN_DOCKER_OPTS:-} \
 export CONTINUE="${CONTINUE:-1}"
 export PRESERVE_CONTAINER="${PRESERVE_CONTAINER:-1}"
 
-if [ "${DRY_RUN:-0}" = "1" ]; then
-	echo ">> DRY_RUN: config OK. Would run: pi-gen/build-docker.sh -c pi-gen-config"
+if [ "${DRY_RUN}" = 1 ]; then
+	echo ">> dry run: config OK. Would run: pi-gen/build-docker.sh -c pi-gen-config"
 	exit 0
 fi
 

@@ -31,7 +31,7 @@ Raspberry Pi OS Lite (trixie, 32-bit) built with [pi-gen](https://github.com/RPi
 | piece | file on the Pi | what it does |
 |---|---|---|
 | NetworkManager profile `gateway-ethernet` | `/etc/NetworkManager/system-connections/` | fixed address on the Ethernet side, never a default route |
-| NetworkManager WiFi profile | same directory | joins your WiFi at first boot (from `pi-gen-config`) |
+| NetworkManager WiFi profile | same directory | joins your WiFi at first boot (from `network-config`) |
 | dnsmasq | `/etc/dnsmasq.d/gateway-ethernet.conf`, `gateway-reservations.conf` | DHCP + DNS for wired devices, fixed addresses for chosen devices |
 | IP forwarding | `/etc/sysctl.d/99-ip-forward.conf` | lets packets cross between WiFi and Ethernet |
 | nftables | `/etc/nftables.conf` | NAT for internet-bound traffic from wired devices only |
@@ -48,14 +48,14 @@ and your SSH key is installed if you gave one.
 | `pi-gen/` | upstream pi-gen, as a git submodule pinned to one commit |
 | `patches/` | small fixes to pi-gen, applied by you once (see below) |
 | `stage-gateway/` | our extra pi-gen build stage: packages, network templates, login page |
-| `pi-gen-config.example` | pi-gen settings: image name, locale, user, password, WiFi |
-| `network-config.example` | addresses: home network, Ethernet-side subnet, DHCP range |
+| `pi-gen-config.example` | pi-gen settings: image name, locale, user, password, WiFi country |
+| `network-config.example` | WiFi name and password; addresses: home network, Ethernet-side subnet, DHCP range |
 | `pi-gen-mounts/` | files mounted into the build container so `pi-gen/` is never modified |
 | `build.sh`, `clean.sh` | build the image; wipe a previous build |
 
 `build.sh` copies the two `.example` files to `pi-gen-config` and
 `network-config` on first run. Those copies are gitignored because they contain
-your password and WiFi key, so edit them freely.
+your login and WiFi passwords, so edit them freely.
 
 ## Getting it running
 
@@ -74,8 +74,8 @@ git -C pi-gen apply ../patches/*.patch      # one-time pi-gen fixes, see patches
 
 Now edit the two files it created:
 
-- `pi-gen-config`: set `FIRST_USER_NAME`, `FIRST_USER_PASS`, `WPA_COUNTRY`, `WIFI_SSID`, `WIFI_PSK`. Optionally your SSH public key.
-- `network-config`: the defaults work for a home network on 192.168.0.0/24. If your router uses something else (for example 192.168.1.0/24), set `GATEWAY_HOME_LAN` to match, and make sure `GATEWAY_ETH_NET` does not overlap it.
+- `pi-gen-config`: set `FIRST_USER_NAME`, `FIRST_USER_PASS` and `WPA_COUNTRY` (your two-letter country code). Optionally your SSH public key.
+- `network-config`: set `WIFI_SSID` and `WIFI_PSK` to your WiFi network. The address defaults work for a home network on 192.168.0.0/24. If your router uses something else (for example 192.168.1.0/24), set `GATEWAY_HOME_LAN` to match, and make sure `GATEWAY_ETH_NET` does not overlap it.
 - Optional: `stage-gateway/01-network/files/dhcp-reservations.conf` to give a wired device a fixed address.
 
 Then:
@@ -86,7 +86,8 @@ Then:
 
 The image lands in `deploy/<date>-pi-wifi-to-eth-gateway.img`. If the build is
 interrupted, running `./build.sh` again resumes it. `./clean.sh` throws the
-previous build away.
+previous build away. Both scripts take `--help`; `./build.sh --dry-run` checks
+the config files without building.
 
 ### 2. Flash the micro SD card
 
