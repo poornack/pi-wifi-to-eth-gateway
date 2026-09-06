@@ -7,11 +7,6 @@
 
 IMG_NAME="pi-wifi-to-eth-gateway"
 PI_GEN_RELEASE="WiFi <-> Ethernet Gateway"
-
-LOCALE_DEFAULT='en_CA.UTF-8'
-KEYBOARD_KEYMAP='ca'
-KEYBOARD_LAYOUT='Canada'
-TIMEZONE_DEFAULT='America/Los_Angeles'
 TARGET_HOSTNAME='pi-gateway'
 
 # --- Login ------------------------------------------------------------------
@@ -31,7 +26,7 @@ PUBKEY_SSH_FIRST_USER=""
 # Two-letter country code. REQUIRED: without it pi-gen leaves WiFi disabled.
 # This is a pi-gen setting (applied by pi-gen's own stage2), which is why it is
 # here and not in network-config with the WiFi name and password.
-WPA_COUNTRY='US'
+WPA_COUNTRY='CA'
 
 # --- Build stages -----------------------------------------------------------
 # stage0-2 are pi-gen's own (Raspberry Pi OS Lite). stage-gateway is this
@@ -40,3 +35,7 @@ STAGE_LIST="stage0 stage1 stage2 stage-gateway"
 
 # none = plain .img (fastest to flash). Use xz for a much smaller download.
 DEPLOY_COMPRESSION=none
+LOCALE_DEFAULT='en_CA.UTF-8'
+KEYBOARD_KEYMAP='ca'
+KEYBOARD_LAYOUT='Canada'
+TIMEZONE_DEFAULT='America/Los_Angeles'
