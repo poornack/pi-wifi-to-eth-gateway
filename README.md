@@ -66,8 +66,8 @@ installed, plus `qemu-user-static` on Linux (`sudo apt install qemu-user-static`
 about 20 GB of free disk, and 30 to 60 minutes.
 
 ```bash
-git clone --recurse-submodules git@github.com:poornack/pi-wifi-to-eth.git
-cd pi-wifi-to-eth
+git clone --recurse-submodules git@github.com:poornack/pi-wifi-to-eth-modem.git
+cd pi-wifi-to-eth-modem
 git -C pi-gen apply ../patches/*.patch      # one-time pi-gen fixes, see patches/README.md
 ./build.sh                                  # first run creates the config files and stops
 ```
